@@ -7,6 +7,7 @@ module Razorpay
   class RazorpayPaymentTest < Minitest::Test
     def setup
       @payment_id = 'fake_payment_id'
+      @card_id = 'card_6krZ6bcjoeqyV9'
 
       # Any request that ends with payments/payment_id
       stub_get(%r{payments\/#{Regexp.quote(@payment_id)}$}, 'fake_payment')
@@ -43,6 +44,13 @@ module Razorpay
       refund = Razorpay::Payment.fetch(@payment_id).refund
       assert_instance_of Razorpay::Refund, refund
       assert_equal refund.payment_id, @payment_id
+    end
+
+    def test_payment_card
+      stub_post(%r{cards/#{@card_id}$}, 'fake_card', {})
+      card = Razorpay::Payment.fetch(@payment_id).card
+      assert_instance_of Razorpay::Card, card
+      assert_equal card.id, @card_id
     end
 
     def test_partial_refund

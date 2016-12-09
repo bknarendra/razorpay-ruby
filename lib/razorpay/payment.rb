@@ -35,5 +35,10 @@ module Razorpay
     def method
       method_missing(:method)
     end
+
+    def card
+      Razorpay::Request.new('cards').fetch(card_id)
+    end
+
   end
 end
